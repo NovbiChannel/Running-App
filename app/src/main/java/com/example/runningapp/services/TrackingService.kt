@@ -15,17 +15,16 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.runningapp.R
-import com.example.runningapp.other.Constatns.ACTION_PAUSE_SERVICE
-import com.example.runningapp.other.Constatns.ACTION_START_OR_RESUME_SERVICE
-import com.example.runningapp.other.Constatns.ACTION_STOP_SERVICE
-import com.example.runningapp.other.Constatns.FASTEST_LOCATION_INTERVAL
-import com.example.runningapp.other.Constatns.LOCATION_UPDATE_INTERVAL
-import com.example.runningapp.other.Constatns.NOTIFICATION_CHANNEL_ID
-import com.example.runningapp.other.Constatns.NOTIFICATION_CHANNEL_NAME
-import com.example.runningapp.other.Constatns.NOTIFICATION_ID
-import com.example.runningapp.other.Constatns.TIMER_UPDATE_INTERVAL
+import com.example.runningapp.other.Constants.ACTION_PAUSE_SERVICE
+import com.example.runningapp.other.Constants.ACTION_START_OR_RESUME_SERVICE
+import com.example.runningapp.other.Constants.ACTION_STOP_SERVICE
+import com.example.runningapp.other.Constants.FASTEST_LOCATION_INTERVAL
+import com.example.runningapp.other.Constants.LOCATION_UPDATE_INTERVAL
+import com.example.runningapp.other.Constants.NOTIFICATION_CHANNEL_ID
+import com.example.runningapp.other.Constants.NOTIFICATION_CHANNEL_NAME
+import com.example.runningapp.other.Constants.NOTIFICATION_ID
+import com.example.runningapp.other.Constants.TIMER_UPDATE_INTERVAL
 import com.example.runningapp.other.TrackingUtility
 import com.google.android.gms.location.*
 import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
@@ -76,10 +75,10 @@ class TrackingService: LifecycleService() {
         curNotificationBuilder = baseNotificationBuilder
         postInitialValues()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        isTracking.observe(this, Observer {
+        isTracking.observe(this) {
             updateLocationTracking(it)
             updateNotificationTrackingState(it)
-        })
+        }
     }
 
     private fun killService() {
@@ -87,7 +86,7 @@ class TrackingService: LifecycleService() {
         isFirstRun = true
         pauseService()
         postInitialValues()
-        stopForeground(true)
+        stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
 
@@ -203,7 +202,7 @@ class TrackingService: LifecycleService() {
         override fun onLocationResult(result: LocationResult) {
             super.onLocationResult(result)
             if (isTracking.value!!) {
-                result?.locations?.let { locations ->
+                result.locations.let { locations ->
                     for (location in locations) {
                         addPathPoint(location)
                         Timber.d("NEW LOCATION: ${location.latitude}, ${location.longitude}")
@@ -241,13 +240,13 @@ class TrackingService: LifecycleService() {
 
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
-        timeRunInSeconds.observe(this, Observer {
+        timeRunInSeconds.observe(this) {
             if (!serviceKilled) {
                 val notification = curNotificationBuilder
                     .setContentText(TrackingUtility.getFormaterStopWatchTime(it * 1000L))
                 notificationManager.notify(NOTIFICATION_ID, notification.build())
             }
-        })
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

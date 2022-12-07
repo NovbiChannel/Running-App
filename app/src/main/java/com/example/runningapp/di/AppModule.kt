@@ -3,7 +3,7 @@ package com.example.runningapp.di
 import android.content.Context
 import androidx.room.Room
 import com.example.runningapp.db.RunningDatabase
-import com.example.runningapp.other.Constatns.RUNNING_DATABASE_NAME
+import com.example.runningapp.other.Constants.RUNNING_DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
