@@ -2,4 +2,12 @@
     <string name="google_maps_key">AIzaSyD0H5QypOS7AjkalWxxGbDYJRQ0hkWsWzc</string>
 
     <string name="app_name">Running App</string>
+
+    <string-array name="filter_option">
+        <item>Date</item>
+        <item>Running Time</item>
+        <item>Distance</item>
+        <item>Average Speed</item>
+        <item>Calories Burned</item>
+    </string-array>
 </resources>
